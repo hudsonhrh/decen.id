@@ -1,0 +1,31 @@
+type MembershipNFT {
+  id: ID!
+  owner: Address!
+  tokenId: BigInt!
+}
+
+type ParticipationToken {
+  id: ID!
+  owner: Address!
+  balance: BigInt!
+}
+
+type Proposal {
+  id: ID!
+  description: String!
+  voteCount: BigInt!
+}
+
+type VotingEvent {
+  id: ID!
+  proposalIndex: BigInt!
+  voter: Address!
+  voteAmount: BigInt!
+}
+
+type Query {
+  memberships: [MembershipNFT!]!
+  participations: [ParticipationToken!]!
+  proposals: [Proposal!]!
+  votingEvents: [VotingEvent!]!
+}

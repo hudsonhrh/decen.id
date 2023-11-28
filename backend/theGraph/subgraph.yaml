@@ -1,0 +1,81 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - kind: ethereum/contract
+    name: MembershipNFT
+    network: mumbai
+    source:
+      address: <MembershipNFT_Contract_Address>
+      abi: MembershipNFT
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - MembershipNFT
+      abis:
+        - name: MembershipNFT
+          file: ../abi/MembershipNFT.json
+      eventHandlers:
+        - event: TokenIssued(address,uint256)
+          handler: handleMembershipNFTTokenIssued
+          topics:
+            - TokenIssued(address,uint256)
+      file: ./mapping.ts
+
+
+  - kind: ethereum/contract
+    name: ParticipationToken
+    network: mumbai
+    source:
+      address: <ParticipationToken_Contract_Address>
+      abi: ParticipationToken
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ParticipationToken
+      abis:
+        - name: ParticipationToken
+          file: ../abi/ParticipationToken.json
+      eventHandlers:
+        - event: Minted(address,uint256)
+          handler: handleParticipationTokenMinted
+          topics:
+            - Minted(address,uint256)
+    file: ./mapping.ts
+
+  - kind: ethereum/contract
+    name: VotingContract
+    network: mumbai
+    source:
+      address: <VotingContract_Contract_Address>
+      abi: Voting
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - VotingEvent
+      abis:
+        - name: VotingContract
+          file: ../abi/VotingContract.json
+      eventHandlers:
+        - event: ProposalCreated(uint256,string)
+          handler: handleVotingContractProposalCreated
+          topics:
+            - ProposalCreated(uint256,string)
+
+        - event: Voted(address,uint256,uint256)
+          handler: handleVotingContractVoted
+          topics:
+            - Voted(address,uint256,uint256)
+        file: ./mapping.ts
+

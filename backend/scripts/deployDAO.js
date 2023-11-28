@@ -6,7 +6,16 @@ const ParticipationToken = require('../abi/ParticipationToken.json'); // Importi
 const VotingContract = require('../abi/VotingContract.json'); // Importing the VotingContract contract ABI
 
 async function main() {
-  // Extracting ABI and bytecode from imported JSON.
+  try {
+    // Creating provider and wallet instances.
+    const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_INFURA_URL);
+    const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+    // Fetch and print the current block number
+    const currentBlockNumber = await provider.getBlockNumber();
+    console.log(`Current block number: ${currentBlockNumber}`);
+
+    // Extracting ABI and bytecode from imported JSON.
     const MembershipNFTAbi = MembershipNFT.abi;
     const MembershipNFTBytecode = MembershipNFT.bytecode;
 
@@ -16,46 +25,41 @@ async function main() {
     const VotingContractAbi = VotingContract.abi;
     const VotingContractBytecode = VotingContract.bytecode;
 
-
-  // Creating provider and wallet instances.
-    const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_INFURA_URL);
-    const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-
-  // Creating a ContractFactory instance to deploy the contract.
+    // Creating a ContractFactory instance to deploy the contract.
     const factory = new ethers.ContractFactory(
-        MembershipNFTAbi,
-        MembershipNFTBytecode,
-        wallet
+      MembershipNFTAbi,
+      MembershipNFTBytecode,
+      wallet
     );
 
     const factory2 = new ethers.ContractFactory(
-        ParticipationTokenAbi,
-        ParticipationTokenBytecode,
-        wallet
+      ParticipationTokenAbi,
+      ParticipationTokenBytecode,
+      wallet
     );
 
     const factory3 = new ethers.ContractFactory(
-        VotingContractAbi,
-        VotingContractBytecode,
-        wallet
+      VotingContractAbi,
+      VotingContractBytecode,
+      wallet
     );
 
-    //deploy token
+    // Deploy token
     const token = await factory2.deploy(10000);
     await token.deployed();
     console.log(`Token Contract deployed at address: ${token.address}`);
 
-    //deploy voting
+    // Deploy voting
     const voting = await factory3.deploy(token.address);
     await voting.deployed();
     console.log(`Voting Contract deployed at address: ${voting.address}`);
 
-    // deplopy nft 
+    // Deploy NFT
     const nft = await factory.deploy();
     await nft.deployed();
     console.log(`NFT Contract deployed at address: ${nft.address}`);
 
-    // testing voting contract
+    // Testing voting contract
     const proposalDescription = "New Proposal Description";
     const createProposalTx = await voting.createProposal(proposalDescription);
     await createProposalTx.wait();
@@ -69,10 +73,10 @@ async function main() {
 
     const votes = await voting.getProposalVotes(latestProposalIndex);
     console.log(`Votes for proposal index ${latestProposalIndex}: ${votes}`);
-
-
-
-
+  } catch (error) {
+    console.error(error); // Logging any errors occurred during the deployment.
+    process.exit(1); // Exiting the process with a non-zero status code.
+  }
 }
 
 main()
