@@ -38,4 +38,15 @@ contract VotingContract {
         hasVoted[msg.sender] = true;
         votes[msg.sender] = balance;
     }
+
+    function getProposalCount() public view returns (uint) {
+        return proposals.length;
+    }
+    
+    function getProposalVotes(uint proposalIndex) public view returns (uint) {
+        require(proposalIndex < proposals.length, "Invalid proposal index");
+        return proposals[proposalIndex].voteCount;
+    }
+
+
 }
