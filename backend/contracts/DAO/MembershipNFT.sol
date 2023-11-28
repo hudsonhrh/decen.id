@@ -1,17 +1,15 @@
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract MembershipNFT is ERC721 {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+    uint256 private _currentTokenId = 0;
 
     constructor() ERC721("MembershipNFT", "MNFT") {}
 
     function issueToken(address to) public returns (uint256) {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
+        _currentTokenId++;
+        uint256 newItemId = _currentTokenId;
         _mint(to, newItemId);
         return newItemId;
     }
