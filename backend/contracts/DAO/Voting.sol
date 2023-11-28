@@ -5,6 +5,8 @@ interface IParticipationToken {
 }
 
 contract VotingContract {
+    address public owner;
+    
     IParticipationToken public token;
 
     struct Proposal {
@@ -22,6 +24,13 @@ contract VotingContract {
 
     constructor(address tokenAddress) {
         token = IParticipationToken(tokenAddress);
+        owner = msg.sender;
+        
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You do not have the required privileges to do this"); //require statement
+        _;
     }
 
     function createProposal(string memory description) public {

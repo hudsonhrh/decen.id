@@ -1,31 +1,26 @@
-type MembershipNFT {
+type MembershipNFT @entity {
   id: ID!
-  owner: Address!
+  owner: Bytes!
   tokenId: BigInt!
 }
 
-type ParticipationToken {
+type ParticipationToken @entity{
   id: ID!
-  owner: Address!
+  owner: Bytes!
   balance: BigInt!
 }
 
-type Proposal {
+type Proposal @entity{
   id: ID!
   description: String!
   voteCount: BigInt!
 }
 
-type VotingEvent {
+type VotingEvent @entity{
   id: ID!
   proposalIndex: BigInt!
-  voter: Address!
+  voter: Bytes!
   voteAmount: BigInt!
 }
 
-type Query {
-  memberships: [MembershipNFT!]!
-  participations: [ParticipationToken!]!
-  proposals: [Proposal!]!
-  votingEvents: [VotingEvent!]!
-}
+

@@ -7,9 +7,9 @@ dataSources:
     name: MembershipNFT
     network: mumbai
     source:
-      address: <MembershipNFT_Contract_Address>
+      address: "0x284A569952D6A63f86948D1B008fa8C5B59A3013"
       abi: MembershipNFT
-      startBlock: 0
+      startBlock: 42954736
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -22,18 +22,16 @@ dataSources:
       eventHandlers:
         - event: TokenIssued(address,uint256)
           handler: handleMembershipNFTTokenIssued
-          topics:
-            - TokenIssued(address,uint256)
-      file: ./mapping.ts
+      file: ./mappings.ts
 
 
   - kind: ethereum/contract
     name: ParticipationToken
     network: mumbai
     source:
-      address: <ParticipationToken_Contract_Address>
+      address: "0x9033afB94d8E2c2eF73885806184df5F0CFCea33"
       abi: ParticipationToken
-      startBlock: 0
+      startBlock: 42954736
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -46,17 +44,15 @@ dataSources:
       eventHandlers:
         - event: Minted(address,uint256)
           handler: handleParticipationTokenMinted
-          topics:
-            - Minted(address,uint256)
-    file: ./mapping.ts
+      file: ./mappings.ts
 
   - kind: ethereum/contract
     name: VotingContract
     network: mumbai
     source:
-      address: <VotingContract_Contract_Address>
-      abi: Voting
-      startBlock: 0
+      address: "0x9Bf7e2E76A2B75f0BCf6FeFa87e7b0A80Bc2fEEe"
+      abi: VotingContract
+      startBlock: 42954736
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -68,14 +64,10 @@ dataSources:
         - name: VotingContract
           file: ../abi/VotingContract.json
       eventHandlers:
-        - event: ProposalCreated(uint256,string)
+        - event: ProposalCreated(indexed uint256,string)
           handler: handleVotingContractProposalCreated
-          topics:
-            - ProposalCreated(uint256,string)
 
-        - event: Voted(address,uint256,uint256)
+        - event: Voted(indexed address,uint256,uint256)
           handler: handleVotingContractVoted
-          topics:
-            - Voted(address,uint256,uint256)
-        file: ./mapping.ts
+      file: ./mappings.ts
 
