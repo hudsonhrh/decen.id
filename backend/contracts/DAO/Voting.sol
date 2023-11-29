@@ -5,6 +5,8 @@ interface IParticipationToken {
 }
 
 contract VotingContract {
+    address public owner;
+    
     IParticipationToken public token;
 
     struct Proposal {
@@ -17,15 +19,27 @@ contract VotingContract {
     mapping(address => bool) public hasVoted;
     mapping(address => uint) public votes;
 
+    event ProposalCreated(uint indexed proposalIndex, string description);
+    event Voted(address indexed voter, uint proposalIndex, uint voteAmount);
+
     constructor(address tokenAddress) {
         token = IParticipationToken(tokenAddress);
+        owner = msg.sender;
+        
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You do not have the required privileges to do this"); //require statement
+        _;
     }
 
     function createProposal(string memory description) public {
+        uint proposalIndex = proposals.length;
         proposals.push(Proposal({
             description: description,
             voteCount: 0
         }));
+        emit ProposalCreated(proposalIndex, description);
     }
 
     function vote(uint proposalIndex) public {
@@ -37,6 +51,7 @@ contract VotingContract {
         proposal.voteCount += balance;
         hasVoted[msg.sender] = true;
         votes[msg.sender] = balance;
+        emit Voted(msg.sender, proposalIndex, balance);
     }
 
     function getProposalCount() public view returns (uint) {
@@ -47,6 +62,4 @@ contract VotingContract {
         require(proposalIndex < proposals.length, "Invalid proposal index");
         return proposals[proposalIndex].voteCount;
     }
-
-
 }

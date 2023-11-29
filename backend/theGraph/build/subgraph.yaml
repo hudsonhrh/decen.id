@@ -1,0 +1,67 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: MembershipNFT
+    network: mumbai
+    source:
+      address: "0x8d24D95C78179DbD561D4bCB3885c8d9A78F140e"
+      abi: MembershipNFT
+      startBlock: 42954736
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - MembershipNFT
+      abis:
+        - name: MembershipNFT
+          file: abi/MembershipNFT.json
+      eventHandlers:
+        - event: TokenIssued(address,uint256)
+          handler: handleMembershipNFTTokenIssued
+      file: MembershipNFT/MembershipNFT.wasm
+  - kind: ethereum/contract
+    name: ParticipationToken
+    network: mumbai
+    source:
+      address: "0x9033afB94d8E2c2eF73885806184df5F0CFCea33"
+      abi: ParticipationToken
+      startBlock: 42954736
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ParticipationToken
+      abis:
+        - name: ParticipationToken
+          file: abi/ParticipationToken.json
+      eventHandlers:
+        - event: Minted(address,uint256)
+          handler: handleParticipationTokenMinted
+      file: MembershipNFT/MembershipNFT.wasm
+  - kind: ethereum/contract
+    name: VotingContract
+    network: mumbai
+    source:
+      address: "0x9Bf7e2E76A2B75f0BCf6FeFa87e7b0A80Bc2fEEe"
+      abi: VotingContract
+      startBlock: 42954736
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - VotingEvent
+        - Proposal
+      abis:
+        - name: VotingContract
+          file: abi/VotingContract.json
+      eventHandlers:
+        - event: Voted(indexed address,uint256,uint256)
+          handler: handleVotingContractVoted
+        - event: ProposalCreated(indexed uint256,string)
+          handler: handleVotingContractProposalCreated
+      file: MembershipNFT/MembershipNFT.wasm

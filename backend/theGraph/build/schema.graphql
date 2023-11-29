@@ -1,0 +1,26 @@
+type MembershipNFT @entity {
+  id: ID!
+  owner: Bytes!
+  tokenId: BigInt!
+}
+
+type ParticipationToken @entity{
+  id: ID!
+  owner: Bytes!
+  balance: BigInt!
+}
+
+type Proposal @entity{
+  id: ID!
+  description: String!
+  voteCount: BigInt!
+}
+
+type VotingEvent @entity{
+  id: ID!
+  proposalIndex: BigInt!
+  voter: Bytes!
+  voteAmount: BigInt!
+}
+
+
