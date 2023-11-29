@@ -1,7 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
-
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: MembershipNFT
@@ -18,13 +17,11 @@ dataSources:
         - MembershipNFT
       abis:
         - name: MembershipNFT
-          file: ../abi/MembershipNFT.json
+          file: abi/MembershipNFT.json
       eventHandlers:
         - event: TokenIssued(address,uint256)
           handler: handleMembershipNFTTokenIssued
-      file: ./mappings.ts
-
-
+      file: MembershipNFT/MembershipNFT.wasm
   - kind: ethereum/contract
     name: ParticipationToken
     network: mumbai
@@ -40,12 +37,11 @@ dataSources:
         - ParticipationToken
       abis:
         - name: ParticipationToken
-          file: ../abi/ParticipationToken.json
+          file: abi/ParticipationToken.json
       eventHandlers:
         - event: Minted(address,uint256)
           handler: handleParticipationTokenMinted
-      file: ./mappings.ts
-
+      file: MembershipNFT/MembershipNFT.wasm
   - kind: ethereum/contract
     name: VotingContract
     network: mumbai
@@ -62,13 +58,10 @@ dataSources:
         - Proposal
       abis:
         - name: VotingContract
-          file: ../abi/VotingContract.json
+          file: abi/VotingContract.json
       eventHandlers:
         - event: Voted(indexed address,uint256,uint256)
           handler: handleVotingContractVoted
         - event: ProposalCreated(indexed uint256,string)
           handler: handleVotingContractProposalCreated
-
-
-      file: ./mappings.ts
-
+      file: MembershipNFT/MembershipNFT.wasm

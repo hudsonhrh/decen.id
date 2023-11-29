@@ -110,6 +110,32 @@ export class Transfer__Params {
   }
 }
 
+export class UserDataUpdated extends ethereum.Event {
+  get params(): UserDataUpdated__Params {
+    return new UserDataUpdated__Params(this);
+  }
+}
+
+export class UserDataUpdated__Params {
+  _event: UserDataUpdated;
+
+  constructor(event: UserDataUpdated) {
+    this._event = event;
+  }
+
+  get user(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get votes(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get participationAmount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
 export class MembershipNFT extends ethereum.SmartContract {
   static bind(address: Address): MembershipNFT {
     return new MembershipNFT("MembershipNFT", address);
@@ -153,6 +179,50 @@ export class MembershipNFT extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getUserParticipationAmount(user: Address): BigInt {
+    let result = super.call(
+      "getUserParticipationAmount",
+      "getUserParticipationAmount(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserParticipationAmount(user: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserParticipationAmount",
+      "getUserParticipationAmount(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserVotes(user: Address): BigInt {
+    let result = super.call("getUserVotes", "getUserVotes(address):(uint256)", [
+      ethereum.Value.fromAddress(user)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserVotes(user: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserVotes",
+      "getUserVotes(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   isApprovedForAll(owner: Address, operator: Address): boolean {
@@ -549,6 +619,44 @@ export class TransferFromCall__Outputs {
   _call: TransferFromCall;
 
   constructor(call: TransferFromCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateUserCall extends ethereum.Call {
+  get inputs(): UpdateUserCall__Inputs {
+    return new UpdateUserCall__Inputs(this);
+  }
+
+  get outputs(): UpdateUserCall__Outputs {
+    return new UpdateUserCall__Outputs(this);
+  }
+}
+
+export class UpdateUserCall__Inputs {
+  _call: UpdateUserCall;
+
+  constructor(call: UpdateUserCall) {
+    this._call = call;
+  }
+
+  get user(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get newVotes(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get newParticipationAmount(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class UpdateUserCall__Outputs {
+  _call: UpdateUserCall;
+
+  constructor(call: UpdateUserCall) {
     this._call = call;
   }
 }
